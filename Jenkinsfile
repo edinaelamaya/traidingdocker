@@ -10,17 +10,17 @@ pipeline {
     stages {
         stage(\'Build\') {
             steps {
-                // Aquí puedes agregar cualquier paso de construcción necesario para tu proyecto Python
-                sh \'python3 -m pip install -r requirements.txt\' // Instala las dependencias si es necesario
+                // Ejemplo de instalación de dependencias con pip en Windows
+                bat \'python -m pip install -r requirements.txt\' // Reemplaza python con python3 si es necesario
             }
         }
         stage(\'Test\') {
             steps {
-                // Ejecuta tus pruebas en Python
-                sh \'python3 -m pytest\' // Ejecuta tus pruebas con pytest como ejemplo
+                // Ejemplo de ejecución de pruebas con pytest en Windows
+                bat \'python -m pytest\' // Reemplaza python con python3 si es necesario
             }
         }
-        // Puedes agregar más etapas según sea necesario, como etapas de despliegue, etc.
+        // Puedes agregar más etapas según sea necesario
     }
 }'''
         }
