@@ -6,22 +6,31 @@ pipeline {
       steps {
         sh '''pipeline {
     agent any
-
+    
     stages {
         stage(\'Build\') {
             steps {
-                bat \'python3 -m pip install -r requirements.txt\'
+                // Construir la imagen Docker
+                script {
+                    docker.build(\'my-fastapi-app\')
+                }
             }
         }
         stage(\'Test\') {
             steps {
-                
-                bat \'python3 -m pytest\' 
+                // Ejecutar pruebas si es necesario
+                // Puedes agregar comandos para ejecutar tus pruebas aquí
             }
         }
-        
+        stage(\'Deploy\') {
+            steps {
+                // Desplegar la aplicación con Docker Compose
+                bat \'docker-compose up -d\'
+            }
+        }
     }
 }
+
 '''
         }
       }
