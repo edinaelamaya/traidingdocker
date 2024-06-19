@@ -75,11 +75,14 @@ def predict_letter(image):
 
 # Endpoint para la predicción
 @app.post("/predict")
-def predict(upload_files: List[UploadFile] = File(...)):
+async def predict(file: UploadFile = File(...)):
     print("imagen")
-    for uploaded_file in upload_files:
-        contents =  uploaded_file.read()
-        nparr = np.frombuffer(contents, np.uint8)
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        letter = predict_letter(image)
-        return {"predicted_class": ord(letter) - 65}
+    image = Image.open(io.BytesIO(await file.read()))
+    image = np.array(image)  # Convertir a numpy array
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)  # Convertir de RGB a BGR
+    letter = predict_letter(image)
+    return {"predicted_class": ord(letter) - 65}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=80)

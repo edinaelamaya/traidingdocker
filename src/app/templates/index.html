@@ -25,13 +25,58 @@
         const canvas = document.getElementById('canvas');
         const captureButton = document.getElementById('capture');
         const letterDiv = document.getElementById('letter');
+        const letterImage = document.getElementById('letter-image');
         const canvasBackground = document.getElementById('canvas-background');
         const contextBackground = canvasBackground.getContext('2d');
 
         canvasBackground.width = window.innerWidth;
         canvasBackground.height = window.innerHeight;
 
-        // Ball properties (si es necesario para la animación de fondo)
+        const balls = [];
+        const numBalls = 100;
+        const maxBallSize = 10;
+
+        function createBalls() {
+            for (let i = 0; i < numBalls; i++) {
+                const size = Math.random() * maxBallSize;
+                const ball = {
+                    x: Math.random() * canvasBackground.width,
+                    y: Math.random() * canvasBackground.height,
+                    size: size,
+                    color: `rgba(255, 255, 255, ${Math.random() * 0.5})`,
+                    dx: Math.random() * 2 - 1,
+                    dy: Math.random() * 2 - 1
+                };
+                balls.push(ball);
+            }
+        }
+
+        function animateBalls() {
+            contextBackground.clearRect(0, 0, canvasBackground.width, canvasBackground.height);
+            balls.forEach(ball => {
+                contextBackground.beginPath();
+                contextBackground.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
+                contextBackground.fillStyle = ball.color;
+                contextBackground.fill();
+
+                // Move ball
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                // Check for collision with walls
+                if (ball.x + ball.size > canvasBackground.width || ball.x - ball.size < 0) {
+                    ball.dx *= -1;
+                }
+                if (ball.y + ball.size > canvasBackground.height || ball.y - ball.size < 0) {
+                    ball.dy *= -1;
+                }
+            });
+
+            requestAnimationFrame(animateBalls);
+        }
+
+        createBalls();
+        animateBalls();
 
         // Get access to the camera
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -50,6 +95,11 @@
             canvas.toBlob(function(blob) {
                 const formData = new FormData();
                 formData.append('file', blob, 'capture.png');
+
+                // Mostrar la imagen capturada en la sección Predicted Letter
+                const url = URL.createObjectURL(blob);
+                letterImage.src = url;
+                letterImage.style.display = "block"; // Asegurarse de que la imagen se muestre
 
                 fetch('/predict', {
                     method: 'POST',

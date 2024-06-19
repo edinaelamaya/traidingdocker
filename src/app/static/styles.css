@@ -23,7 +23,7 @@ body {
     border-radius: 10px;
 }
 
-h1{
+h1 {
     background-color: aliceblue;
 }
 
@@ -47,7 +47,7 @@ img {
     border-radius: 50%;
     pointer-events: none;
     z-index: -1;
-    animation: move 5s infinite linear;
+    animation: move 10s infinite linear;
 }
 
 @keyframes move {
