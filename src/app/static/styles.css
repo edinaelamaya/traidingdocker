@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #1a237e; /* Navy blue background */
+}
+
+#canvas-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure the canvas is behind all other elements */
+}
+
+#camera, #predicted-letter {
+    display: inline-block;
+    vertical-align: top;
+    margin: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h1{
+    background-color: aliceblue;
+}
+
+#camera {
+    width: 640px;
+}
+
+#predicted-letter {
+    width: 200px;
+    text-align: center;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* Styles for the animated balls */
+.ball {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5); /* Light blue with opacity */
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    animation: move 5s infinite linear;
+}
+
+@keyframes move {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(100vw, 100vh);
+    }
+}

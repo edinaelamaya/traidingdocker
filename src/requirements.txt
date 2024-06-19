@@ -2,7 +2,12 @@ pydantic==1.10.8
 pymongo==4.5.0
 pytest==7.3.1
 python-dateutil==2.8.2
+jinja2
 python-dotenv==1.0.0
 python-multipart==0.0.6
 uvicorn==0.24.0.post1
 fastapi
+opencv-python-headless
+numpy
+pillow
+tensorflow

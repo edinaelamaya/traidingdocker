@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+    <canvas id="canvas-background"></canvas>
+    <h1>Sign Language Recognition</h1>
+    <div id="camera">
+        <video id="video" width="640" height="480" autoplay></video>
+        <button id="capture">Capture</button>
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    </div>
+    <div id="predicted-letter">
+        <h2>Predicted Letter:</h2>
+        <div id="letter"></div>
+        <img id="letter-image" src="" alt="Predicted Letter Image">
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const letterDiv = document.getElementById('letter');
+        const canvasBackground = document.getElementById('canvas-background');
+        const contextBackground = canvasBackground.getContext('2d');
+
+        canvasBackground.width = window.innerWidth;
+        canvasBackground.height = window.innerHeight;
+
+        // Ball properties (si es necesario para la animación de fondo)
+
+        // Get access to the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            });
+        }
+
+        // Capture the image
+        captureButton.addEventListener('click', function() {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 640, 480);
+
+            // Convertir el canvas a blob para enviarlo al servidor
+            canvas.toBlob(function(blob) {
+                const formData = new FormData();
+                formData.append('file', blob, 'capture.png');
+
+                fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    letterDiv.textContent = String.fromCharCode(data.predicted_class + 65); // Convertir clase a letra (asumiendo clase 0 es A, 1 es B, etc.)
+                })
+                .catch(error => console.error('Error:', error));
+            }, 'image/png');
+        });
+    </script>
+</body>
+</html>
